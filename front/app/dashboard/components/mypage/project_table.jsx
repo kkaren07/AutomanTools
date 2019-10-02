@@ -5,9 +5,11 @@ import { withRouter } from 'react-router-dom';
 import { withStyles } from '@material-ui/core/styles';
 import { TableHeaderColumn } from 'react-bootstrap-table';
 import Typography from '@material-ui/core/Typography';
-
 import ResizableTable from 'automan/dashboard/components/parts/resizable_table';
 import { mainStyle } from 'automan/assets/main-style';
+import DeleteIcon from '@material-ui/icons/Delete';
+import IconButton from '@material-ui/core/IconButton';
+
 //import projectReducer from 'automan/dashboard/reducers/projectReducer';
 
 class ProjectTable extends React.Component {
@@ -26,7 +28,6 @@ class ProjectTable extends React.Component {
   };
   updateData = () => {
     this.setState({ data: [], is_loading: true, error: null });
-
     RequestClient.get(
       '/projects/',
       this.state.query.getData(),
@@ -77,6 +78,13 @@ class ProjectTable extends React.Component {
   handleClick = row => {
     this.props.history.push('/' + row.id + '/home/');
   };
+  deleteClick = () => {
+    //ここに削除ボタンの処理かく
+    RequestClient.delete(
+      ('/projects/' + project_id + '/'),
+      this.state.query.deleteData(),
+    );
+  };
   render() {
     if (this.state.error) {
       return <div> {this.state.error} </div>;
@@ -116,6 +124,7 @@ class ProjectTable extends React.Component {
       searchDelayTime: 1000
     };
     options.onRowClick = (row, colIndex, rowIndex) => {
+      //console.log(rowIndex);
       this.handleClick(row);
     };
     const fetchProp = {
